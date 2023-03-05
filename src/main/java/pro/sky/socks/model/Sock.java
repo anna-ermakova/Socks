@@ -9,7 +9,7 @@ import lombok.ToString;
 @Builder
 @EqualsAndHashCode
 @ToString
-public class Sock {
+public class Sock{
     private Color color;
     private SocksSize socksSize;
     public Integer cottonContent;

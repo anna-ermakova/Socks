@@ -94,9 +94,18 @@ public class SocksService {
     }
     public void importOperations(MultipartFile multipartFile) throws FileProcessingException,FileNotFoundException {
         String json = fileService.importOperations(multipartFile);
-        try{
-            List<SocksDto>transactionDtoList=new ObjectMapper().readValue(json, new TypeReference<ArrayList<SocksTransactionDto>>() {
-            })
+        try {
+            List<SocksTransactionDto> transactionDtoList = new ObjectMapper().readValue(json, new TypeReference<ArrayList<SocksTransactionDto>>() {
+            });
+            transactionDtoList.forEach(t ->) {
+                switch (t.getOperationType()) {
+                    case ISSUANCE -> sellSocks(socksMapper.toSocksDto(t));
+                    case ACCEPTANCE -> addSocks(socksMapper.toSocksDto(t));
+                    case WRITEOFF -> removeDefectiveSocks(socksMapper.toSocksDto(t));
+                }
+            });
+        } catch (JsonProcessingException e) {
+
         }
     }
 }

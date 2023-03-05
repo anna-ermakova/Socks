@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pro.sky.socks.dto.SocksDto;
+import pro.sky.socks.exception.FileProcessingException;
 import pro.sky.socks.model.Color;
 import pro.sky.socks.model.SocksSize;
 import pro.sky.socks.servise.FileService;
@@ -58,7 +59,7 @@ public class SocksController {
 
     @GetMapping("/export")
     @Operation(description = "Экспорт файла")
-    public ResponseEntity<InputStreamResource> downloadFile()throws IOException {
+    public ResponseEntity<InputStreamResource> downloadFile()throws IOException,FileProcessingException {
         InputStreamResource inputStreamResource = socksService.exportFile();
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -68,7 +69,7 @@ public class SocksController {
     }
     @PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(description = "Импорт файла")
-    public ResponseEntity<Void> upLoadDataFile(@RequestParam MultipartFile file) throws FileNotFoundException {
+    public ResponseEntity<Void> upLoadDataFile(@RequestParam MultipartFile file) throws FileNotFoundException, FileProcessingException {
         socksService.importFile(file);
         return ResponseEntity.ok().build();
     }
